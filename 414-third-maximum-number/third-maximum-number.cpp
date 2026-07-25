@@ -8,7 +8,6 @@ public:
 
         for (int num : nums)
         {
-            // Skip duplicates
             if (num == first || num == second || num == third)
                 continue;
 

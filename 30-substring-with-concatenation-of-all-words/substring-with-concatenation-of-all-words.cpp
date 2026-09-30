@@ -4,52 +4,58 @@ public:
 
         vector<int> ans;
 
-        int n = s.size();
         int wordLen = words[0].size();
         int wordCount = words.size();
-        int totalLen = wordLen * wordCount;
-
-        if (totalLen > n) {
-            return ans;
-        }
 
         unordered_map<string, int> mp;
 
-        for (string &word : words) {
+        // Required frequency
+        for (string word : words) {
             mp[word]++;
         }
 
-        for (int start = 0; start < wordLen; start++) {
+        // Try every possible alignment
+        for (int i = 0; i < wordLen; i++) {
 
-            int low = start;
+            int left = i;
             int count = 0;
 
-            unordered_map<string, int> window;
+            unordered_map<string, int> seen;
 
-            for (int high = start; high + wordLen <= n; high += wordLen) {
+            for (int right = i;
+                 right + wordLen <= s.size();
+                 right += wordLen) {
 
-                string word = s.substr(high, wordLen);
+                string word = s.substr(right, wordLen);
 
+                // Word is not present in words
                 if (mp.find(word) == mp.end()) {
-                    window.clear();
+
+                    seen.clear();
                     count = 0;
-                    low = high + wordLen;
-                    continue;
+                    left = right + wordLen;
+
                 }
+                else {
 
-                window[word]++;
-                count++;
+                    seen[word]++;
+                    count++;
 
-                while (window[word] > mp[word]) {
-                    string leftWord = s.substr(low, wordLen);
+                    // Too many copies of this word
+                    while (seen[word] > mp[word]) {
 
-                    window[leftWord]--;
-                    low += wordLen;
-                    count--;
-                }
+                        string leftWord =
+                            s.substr(left, wordLen);
 
-                if (count == wordCount) {
-                    ans.push_back(low);
+                        seen[leftWord]--;
+                        left += wordLen;
+                        count--;
+                    }
+
+                    // Complete concatenation found
+                    if (count == wordCount) {
+                        ans.push_back(left);
+                    }
                 }
             }
         }

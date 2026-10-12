@@ -1,35 +1,31 @@
+
 class Solution {
 public:
     vector<vector<int>> insert(vector<vector<int>>& intervals,
-                                vector<int>& newInterval) {
-
+                               vector<int>& newInterval) {
         vector<vector<int>> temp;
         bool inserted = false;
 
-        for (auto interval : intervals) {
-
-            if (!inserted && newInterval[0] <= interval[0]) {
+        for (int i = 0; i < intervals.size(); i++) {
+            if (!inserted && newInterval[0] < intervals[i][0]) {
                 temp.push_back(newInterval);
                 inserted = true;
             }
 
-            temp.push_back(interval);
+            temp.push_back(intervals[i]);
         }
 
         if (!inserted) {
             temp.push_back(newInterval);
         }
 
-        // LC 56 merge
         vector<vector<int>> ans;
 
-        for (auto interval : temp) {
-
-            if (ans.empty() || interval[0] > ans.back()[1]) {
-                ans.push_back(interval);
-            }
-            else {
-                ans.back()[1] = max(ans.back()[1], interval[1]);
+        for (int i = 0; i < temp.size(); i++) {
+            if (ans.empty() || temp[i][0] > ans.back()[1]) {
+                ans.push_back(temp[i]);
+            } else {
+                ans.back()[1] = max(ans.back()[1], temp[i][1]);
             }
         }
 

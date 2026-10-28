@@ -1,23 +1,24 @@
-
 class Solution {
 public:
     string removeKdigits(string num, int k) {
-        string st = "";
+        string st;
 
-        for (int i = 0; i < num.size(); i++) {
-            while (!st.empty() && k > 0 && st.back () > num[i]) {
+        for (char c : num) {
+            while (!st.empty() && k > 0 && st.back() > c) {
                 st.pop_back();
                 k--;
             }
 
-            st.push_back(num[i]);
+            st.push_back(c);
         }
 
+        // If removals are still remaining, remove from the end
         while (k > 0 && !st.empty()) {
             st.pop_back();
             k--;
         }
 
+        // Remove leading zeros
         int i = 0;
         while (i < st.size() && st[i] == '0') {
             i++;
@@ -25,10 +26,6 @@ public:
 
         st = st.substr(i);
 
-        if (st == "") {
-            return "0";
-        }
-
-        return st;
+        return st.empty() ? "0" : st;
     }
 };
